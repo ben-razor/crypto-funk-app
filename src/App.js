@@ -124,7 +124,7 @@ function App() {
   }
 
   async function getStoredValue() {
-      const value = await contract.getStoredValue(account);
+      let value = await contract.punkIndexToAddress();
       toast('Successfully read latest stored value.', { type: 'success' });
 
       setStoredValue(value);
@@ -179,7 +179,43 @@ function App() {
   const LoadingIndicator = () => <span className="rotating-icon">⚙️</span>;
 
   return (
+
       <div>
+        <div class="center-panel">
+            <h1>Crypto Funk</h1>
+            <p>Really exclusive, high quality NFT artworks</p>
+            <div class="image-panel">
+                <div class="nft-details">
+                    <div class="image-nft image-0"></div>
+                    <div>Sharon</div>
+                    <div class="nft-controls">
+                        <button>Get</button>
+                    </div>
+                </div>
+                <div class="nft-details">
+                    <div class="image-nft image-1"></div>
+                    <div>Baloon Face</div>
+                    <div class="nft-controls">
+                        <button>Get</button>
+                    </div>
+                </div>
+                <div class="nft-details">
+                    <div class="image-nft image-2"></div>
+                    <div>Don Snow</div>
+                    <div class="nft-controls">
+                        <button>Get</button>
+                    </div>
+                </div>
+                <div class="nft-details">
+                    <div class="image-nft image-3"></div>
+                    <div>C Westwood</div>
+                    <div class="nft-controls">
+                        <button>Get</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
           Your ETH address: <b>{accounts?.[0]}</b>
           <br />
           <br />

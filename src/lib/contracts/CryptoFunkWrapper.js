@@ -17,10 +17,49 @@ export class CryptoFunkWrapper {
         return Boolean(this.address);
     }
 
-    async getStoredValue(fromAddress) {
-        const data = await this.contract.methods.get().call({ from: fromAddress });
-
+    async punksRemainingToAssign(fromAddress) {
+        const data = await this.contract.methods.punksRemainingToAssign().call({ from: fromAddress });
         return parseInt(data, 10);
+    }
+
+    async punkIndexToAddress(index) {
+        const data = await this.contract.methods.punkIndexToAddress(index).call();
+        return data;
+    }
+
+    async getPunk(index, fromAddress) {
+        const tx = await this.contract.methods.getPunk(index).send({
+            ...DEFAULT_SEND_OPTIONS,
+            from: fromAddress
+        });
+
+        return tx;
+    }
+
+    async setStoredValue(value, fromAddress) {
+        const tx = await this.contract.methods.set(value).send({
+            ...DEFAULT_SEND_OPTIONS,
+            from: fromAddress,
+            value
+        });
+
+        return tx;
+    }
+
+    async deploy(fromAddress, name, symbol, hash, img_count) {
+        const deployTx = await (this.contract
+					.deploy({
+							data: CryptoFunkMarket.bytecode,
+							arguments: [name, symbol, hash, img_count]
+					})
+					.send({
+							...DEFAULT_SEND_OPTIONS,
+							from: fromAddress,
+							to: '0x0000000000000000000000000000000000000000'
+					})
+				);
+
+        this.useDeployed(deployTx.contractAddress);
     }
 
     async setStoredValue(value, fromAddress) {
