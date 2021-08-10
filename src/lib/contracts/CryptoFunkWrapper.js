@@ -27,6 +27,16 @@ export class CryptoFunkWrapper {
         return data;
     }
 
+    async punksOfferedForSale(index) {
+        const data = await this.contract.methods.punksOfferedForSale(index).call();
+        return data;
+    }
+
+    async punkBids(index) {
+        const data = await this.contract.methods.punkBids(index).call();
+        return data;
+    }
+
     async getPunk(index, fromAddress) {
         const tx = await this.contract.methods.getPunk(index).send({
             ...DEFAULT_SEND_OPTIONS,
@@ -37,10 +47,10 @@ export class CryptoFunkWrapper {
     }
 
     async setStoredValue(value, fromAddress) {
-        const tx = await this.contract.methods.set(value).send({
+        const tx = await this.contract.methods.getPunk(value).send({
             ...DEFAULT_SEND_OPTIONS,
             from: fromAddress,
-            value
+            value: 0
         });
 
         return tx;
