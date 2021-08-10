@@ -246,31 +246,31 @@ function App() {
         }
         let owner = punkIndexToAddress[index];
         let owned = false;
-        if(owner && owner != zeroAddress) {
+        if(owner && owner !== zeroAddress) {
             owned = true;
         }
         return <div className="nft-details" key={index}>
             <div className={"image-nft image-" + index}></div>
             <div>{name}</div>
             <div className="nft-controls">
-                <div class="punkOwner">
+                <div className="punkOwner">
                 {!owned &&
                     <button onClick={() => getPunk(index)}>Get</button>
                 }
                 {owned && (isAddress(punkIndexToAddress[index]) ? <div>Yours</div> : <div>Owned</div>)}
                 </div>
-                <div class="punksOfferedForSale">Sell for: {price}</div>
-                <div class="punkBid">Bid: {bidPrice}</div>
+                <div className="punksOfferedForSale">Sell for: {price}</div>
+                <div className="punkBid">Bid: {bidPrice}</div>
             </div>
         </div>
     }
 
     return (
     <div>
-        <div class="center-panel">
+        <div className="center-panel">
             <h1>Crypto Funk</h1>
             <p>Really exclusive, high quality NFT artworks</p>
-            <div class="image-panel">
+            <div className="image-panel">
             { 
                 punkNames.map((name, index) => {
                     return getPunkPanel(name, index);
