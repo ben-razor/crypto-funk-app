@@ -233,7 +233,7 @@ function App() {
 
     const LoadingIndicator = () => <span className="rotating-icon">⚙️</span>;
 
-    let punkNames = ['Sharon', 'Balloon Face', 'Don Snow', 'Yso Angry'];
+    let punkNames = ['Sharon', 'BalloonFace', 'Don Snow', 'Yso Angry'];
     const zeroAddress = '0x0000000000000000000000000000000000000000';
     function isAddress(address) {
         return address && address !== zeroAddress;
