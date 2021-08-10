@@ -264,7 +264,28 @@ function App() {
             </div>
         </div>
     }
+        
+    async function getDepositAddress(ethAddress) {
+        const addressTranslator = new AddressTranslator();
+        const depositAddress = await addressTranslator.getLayer2DepositAddress(web3, ethAddress);
+        return depositAddress;
+    }
 
+    const [paymentEthAddr, setPaymentEthAddr] = useState('');
+    const [depositAddr, setDepositAddr] = useState('');
+    function handlePaymentEthAddrChanged(event) {
+        console.log(event.target.value)
+        setPaymentEthAddr(event.target.value);
+    }
+
+    function handlePaymentEthAddrSubmit(event) {
+        async function handlePaymentEthAddrSubmit() {
+            let depositAddrNew = await getDepositAddress(paymentEthAddr);
+            setDepositAddr(depositAddrNew.addressString);
+        }
+        handlePaymentEthAddrSubmit();
+       event.preventDefault();
+    }
     return (
     <div>
         <div className="center-panel">
@@ -277,6 +298,27 @@ function App() {
                 })
             }
             </div>
+            <p>
+                Hey dude, you wanna get funky with your Eth? I got what you need.
+            </p>
+            <form onSubmit={handlePaymentEthAddrSubmit}>
+                <input type="text" onChange={handlePaymentEthAddrChanged} placeholder="Enter your eth address to create deposit address" />
+                <input type="submit" value="Submit" />
+            </form>
+
+            <p>
+                Deposit address: {depositAddr && 
+                    <div>
+                        <p className="depositAddr">{depositAddr}</p>
+                        <p>
+                            Use the <a href="https://force-bridge-test.ckbapp.dev/bridge/Ethereum/Nervos?xchain-asset=0x0000000000000000000000000000000000000000">force bridge</a> to convert to your eth to magic ckEth.
+                        </p>
+                        <p>
+                            (Enter this deposit address for the recipient)
+                        </p>
+                    </div>
+                }
+            </p>
         </div>
 
         Your ETH address: <b>{accounts?.[0]}</b>

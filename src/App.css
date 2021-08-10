@@ -45,13 +45,18 @@
 .center-panel {
   font-family: "8bit";
   text-align: center;
+  width: 90%;
+  margin: auto;
+  box-sizing: content-box;
 }
 
 .image-panel {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   margin: auto;
   justify-content: center;
+  width: 100%;
 }
 
 .nft-details {
@@ -102,4 +107,11 @@ button {
 
 .punkOwner {
   margin: 0.7em;
+}
+
+.depositAddr {
+  font-size: 0.5em;
+  width: 50%;
+  word-wrap: break-word;
+  margin: auto;
 }
