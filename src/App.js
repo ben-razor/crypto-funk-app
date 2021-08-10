@@ -7,8 +7,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import { PolyjuiceHttpProvider } from '@polyjuice-provider/web3';
 import { AddressTranslator } from 'nervos-godwoken-integration';
 import { CryptoFunkWrapper } from './lib/contracts/CryptoFunkWrapper';
+import CompiledContractArtifact from './build/contracts/ERC20.json';
 import { CONFIG } from './config.js';
 import BigInt from 'big-integer';
+
+const SUDT_PROXY_CONTRACT_ADDRESS = '0xC517f5b092154072EF94ddFcAA02D920e4F6aEdF';
+const SUDT_CKETH_ADDRESS = '0x5e4229de7f1a6304099385638e4ef3e85ab7a02b0ed4d4a95783ebd982edb691';
+const CKETH_ETH_ADDRESS = '0x0670009F6126e57C679E90aEE46861D28DA2F703';
 
 const godwokenRpcUrl = CONFIG.WEB3_PROVIDER_URL;
 const providerConfig = {
@@ -271,17 +276,40 @@ function App() {
         return depositAddress;
     }
 
+    async function getPolyjuiceAddress(ethAddress) {
+        const addressTranslator = new AddressTranslator();
+        const polyjuiceAddress = addressTranslator.ethAddressToGodwokenShortAddress(ethAddress);
+        return polyjuiceAddress;
+    }
+
     const [paymentEthAddr, setPaymentEthAddr] = useState('');
+    const [paymentPolyjuiceAddr, setPaymentPolyjuiceAddr] = useState('');
+    const [paymentBalance, setPaymentBalance] = useState(0);
     const [depositAddr, setDepositAddr] = useState('');
+
     function handlePaymentEthAddrChanged(event) {
         console.log(event.target.value)
         setPaymentEthAddr(event.target.value);
+    }
+
+    async function getPolyjuiceBalance() {
+        const contract = new web3.eth.Contract(CompiledContractArtifact.abi, SUDT_PROXY_CONTRACT_ADDRESS);
+        let balance = await contract.methods.balanceOf(polyjuiceAddress).call({
+            from: paymentEthAddr
+        });
+        console.log(balance);
+        return balance;
     }
 
     function handlePaymentEthAddrSubmit(event) {
         async function handlePaymentEthAddrSubmit() {
             let depositAddrNew = await getDepositAddress(paymentEthAddr);
             setDepositAddr(depositAddrNew.addressString);
+            let polyjuiceAddr = await getPolyjuiceAddress(paymentEthAddr);
+            setPaymentPolyjuiceAddr(polyjuiceAddr);
+
+            let erc20Balance = await getPolyjuiceBalance();
+            setPaymentBalance(erc20Balance);
         }
         handlePaymentEthAddrSubmit();
        event.preventDefault();
@@ -302,24 +330,42 @@ function App() {
                 Hey dude, you wanna get funky with your Eth? I got what you need.
             </p>
             <form onSubmit={handlePaymentEthAddrSubmit}>
-                <input type="text" onChange={handlePaymentEthAddrChanged} placeholder="Enter your eth address to create deposit address" />
-                <input type="submit" value="Submit" />
+                <input type="text" size="" onChange={handlePaymentEthAddrChanged} placeholder="Enter Ethereum address" />
+                <input type="submit" value="Create ckEth deposit address" />
             </form>
 
-            <p>
-                Deposit address: {depositAddr && 
-                    <div>
-                        <p className="depositAddr">{depositAddr}</p>
-                        <p>
-                            Use the <a href="https://force-bridge-test.ckbapp.dev/bridge/Ethereum/Nervos?xchain-asset=0x0000000000000000000000000000000000000000">force bridge</a> to convert to your eth to magic ckEth.
-                        </p>
-                        <p>
-                            (Enter this deposit address for the recipient)
-                        </p>
-                    </div>
-                }
-            </p>
-        </div>
+            {depositAddr &&
+                <div>
+                    <p>
+                        Deposit address: {depositAddr && 
+                            <div>
+                                <p className="depositAddr">{depositAddr}</p>
+                                <p>
+                                    Use the <a href="https://force-bridge-test.ckbapp.dev/bridge/Ethereum/Nervos?xchain-asset=0x0000000000000000000000000000000000000000">force bridge</a> to convert to your eth to magic ckEth.
+                                </p>
+                                <p>
+                                    (Enter this deposit address for the recipient)
+                                </p>
+                            </div>
+                        }
+                    </p>
+                    <p>
+                        Polyjuice address: {paymentPolyjuiceAddr && 
+                            <div>
+                                <p className="depositAddr">{paymentPolyjuiceAddr}</p>
+                            </div>
+                        }
+                    </p>
+                    <p>
+                        ERC20 balance: {paymentBalance && 
+                            <div>
+                                <p>{paymentBalance}</p>
+                            </div>
+                        }
+                    </p>
+                </div>
+            }
+            </div>
 
         Your ETH address: <b>{accounts?.[0]}</b>
         <br />

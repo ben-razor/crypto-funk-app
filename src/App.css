@@ -48,6 +48,9 @@
   width: 90%;
   margin: auto;
   box-sizing: content-box;
+  border-bottom: 2px dashed black;
+  padding-bottom: 1em;
+  margin-bottom: 2em;
 }
 
 .image-panel {
@@ -111,7 +114,7 @@ button {
 
 .depositAddr {
   font-size: 0.5em;
-  width: 50%;
+  width: 80%;
   word-wrap: break-word;
   margin: auto;
 }
