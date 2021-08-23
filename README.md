@@ -4,6 +4,14 @@ A Nervos Godwoken port of Cryptopunks with modification to allow suppling of cus
 
 Only getPunk is implemented in UI.
 
+This is a submission for the Nervos Hackathon [7) Port An Existing Ethereum DApp To Polyjuice](https://gitcoin.co/issue/nervosnetwork/grants/8/100026214) 
+
+### Important Information about nervos-godwoken-integration
+
+The instructions for task included: yarn add nervos-godwoken-integration@0.0.6. This library does not work with create-react-app as it uses Javascript features that are too recent. I put in place a workaround where that libary is manually copied into the crypto-funk-app source.
+
+A better solution would be for the author of the nervos-godwoken-integration libary to transpile it to a more widely supported Javascript version before uploading to npm.
+
 ### Screenshots of getPunk process
 
 ![Pre request](https://github.com/ben-razor/nervos-hackathon/blob/main/7-port-app/getPunk-screenshot-1-pre.png)
