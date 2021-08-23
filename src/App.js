@@ -259,7 +259,7 @@ function App() {
             <div>{name}</div>
             <div className="nft-controls">
                 <div className="punkOwner">
-                {!owned &&
+                {(contract && !owned) &&
                     <button onClick={() => getPunk(index)}>Get</button>
                 }
                 {owned && (isAddress(punkIndexToAddress[index]) ? <div>Yours</div> : <div>Owned</div>)}
