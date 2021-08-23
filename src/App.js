@@ -5,7 +5,7 @@ import Web3 from 'web3';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { PolyjuiceHttpProvider } from '@polyjuice-provider/web3';
-import { AddressTranslator } from 'nervos-godwoken-integration';
+import { AddressTranslator } from './nervos-godwoken-integration';
 import { CryptoFunkWrapper } from './lib/contracts/CryptoFunkWrapper';
 import CompiledContractArtifact from './build/contracts/ERC20.json';
 import { CONFIG } from './config.js';
@@ -54,7 +54,7 @@ async function createWeb3() {
 }
 
 function App() {
-    const [web3, setWeb3] = useState(null);
+    const [polyWeb3, setWeb3] = useState(null);
     const [contract, setContract] = useState();
     const [accounts, setAccounts] = useState([]);
     const [l2Balance, setL2Balance] = useState();
@@ -137,7 +137,7 @@ function App() {
     const account = accounts[0];
 
     async function deployContract() {
-        const _contract = new CryptoFunkWrapper(web3);
+        const _contract = new CryptoFunkWrapper(polyWeb3);
 
         try {
             setDeployTxHash(undefined);
@@ -174,7 +174,7 @@ function App() {
     }
 
     async function setExistingContractAddress(contractAddress) {
-        const _contract = new CryptoFunkWrapper(web3);
+        const _contract = new CryptoFunkWrapper(polyWeb3);
         _contract.useDeployed(contractAddress.trim());
 
         setContract(_contract);
@@ -212,7 +212,7 @@ function App() {
     }
 
     useEffect(() => {
-        if (web3) {
+        if (polyWeb3) {
             return;
         }
 
@@ -272,7 +272,7 @@ function App() {
         
     async function getDepositAddress(ethAddress) {
         const addressTranslator = new AddressTranslator();
-        const depositAddress = await addressTranslator.getLayer2DepositAddress(web3, ethAddress);
+        const depositAddress = await addressTranslator.getLayer2DepositAddress(polyWeb3, ethAddress);
         return depositAddress;
     }
 
@@ -293,7 +293,7 @@ function App() {
     }
 
     async function getPolyjuiceBalance() {
-        const contract = new web3.eth.Contract(CompiledContractArtifact.abi, SUDT_PROXY_CONTRACT_ADDRESS);
+        const contract = new polyWeb3.eth.Contract(CompiledContractArtifact.abi, SUDT_PROXY_CONTRACT_ADDRESS);
         let balance = await contract.methods.balanceOf(polyjuiceAddress).call({
             from: paymentEthAddr
         });
